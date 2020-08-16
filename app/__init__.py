@@ -3,6 +3,7 @@ import os
 from datetime import datetime
 from logging.handlers import RotatingFileHandler
 
+from elasticsearch import Elasticsearch
 from flask import Flask
 from flask_login import LoginManager
 from flask_migrate import Migrate
@@ -16,6 +17,9 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 login = LoginManager(app)
 login.login_view = 'login'
+
+app.elasticsearch = Elasticsearch([app.config['ELASTICSEARCH_URL']]) \
+        if app.config['ELASTICSEARCH_URL'] else None
 
 # if not app.debug:
 #     if not os.path.exists('logs'):
